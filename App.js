@@ -1,20 +1,48 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { CartProvider } from './src/context/CartContext';
 
-export default function App() {
+import HomeStack from './src/navigation/HomeStack';
+import RestaurantsStack from './src/navigation/RestaurantsStack';
+import CartScreen from './src/screens/CartScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
+
+const Tab = createBottomTabNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <CartProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+              if (route.name === 'Home') {
+                iconName = 'home';
+              } else if (route.name === 'Restaurants') {
+                iconName = 'restaurant';
+              } else if (route.name === 'Cart') {
+                iconName = 'shopping-cart';
+              } else if (route.name === 'Profile') {
+                iconName = 'person';
+              }
+
+              return <Icon name={iconName} size={size} color={color} />;
+            },
+          })}
+        >
+
+          <Tab.Screen name="Home" component={HomeStack} />
+          <Tab.Screen name="Restaurants" component={RestaurantsStack} />
+          <Tab.Screen name="Cart" component={CartScreen} />
+          <Tab.Screen name="Profile" component={ProfileScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </CartProvider>
+  );
+};
+
+export default App;
